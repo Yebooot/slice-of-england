@@ -12,16 +12,33 @@
 
   --font-heading: var(--font-heading);
   --font-body: var(--font-body);
+  --font-accent: var(--font-accent);
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
+  font-family: var(--font-body), sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), serif;
+}
+
+.font-accent {
+  font-family: var(--font-accent), cursive;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  .bg-floral-pattern {
+    /* Subtle floral overlay using a CSS mask or background image if available */
+    background-image: radial-gradient(circle at 2px 2px, var(--color-tertiary) 1px, transparent 0);
+    background-size: 40px 40px;
+    opacity: 0.05;
   }
 }
 

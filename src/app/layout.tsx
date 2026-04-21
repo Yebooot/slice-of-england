@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Lato } from "next/font/google";
+import { Playfair_Display, Lato, Great_Vibes } from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -14,6 +14,12 @@ const lato = Lato({
   weight: ["300", "400", "700"],
 });
 
+const cursive = Great_Vibes({
+  variable: "--font-accent",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
 export const metadata: Metadata = {
   title: "Slice of England | Moderná Elegancia",
   description: "Tradičné britské popoludňajšie čaje, doručené až k vám.",
@@ -26,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sk" className="scroll-smooth">
-      <body className={`${playfair.variable} ${lato.variable} font-body antialiased bg-background text-foreground`}>
+      <body className={`${playfair.variable} ${lato.variable} ${cursive.variable} font-body antialiased bg-background text-foreground`}>
         {children}
       </body>
     </html>
