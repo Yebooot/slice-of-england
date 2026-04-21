@@ -1,8 +1,49 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
-import { Coffee, Gift, Heart, ArrowRight, UtensilsCrossed } from "lucide-react";
+import { Coffee, Gift, Heart, ArrowRight, UtensilsCrossed, X, Search } from "lucide-react";
 import Logo from "@/components/Logo";
 
 export default function Home() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const productBoxes = [
+    {
+      id: "signature",
+      title: "Signature Box",
+      price: "€12.99",
+      image: "/images/signature-box.jpg",
+      items: [
+        "1x Šunka & syr",
+        "1x Uhorka & cream cheese",
+        "1x Vajíčko & žerucha",
+        "1x Scones + džem & smotana",
+        "1x Snickers cupcake",
+        "1x Red velvet",
+        "1x Citrónová panna cotta"
+      ],
+      highlight: "Sypaný čaj included",
+      theme: "light"
+    },
+    {
+      id: "collection",
+      title: "Collection Box",
+      price: "€21.99",
+      image: "/images/collection-box.jpg",
+      items: [
+        "2x Šunka & syr",
+        "2x Uhorka & cream cheese",
+        "2x Vajíčko & žerucha",
+        "2x Scones + džem & smotana",
+        "2x Snickers cupcake",
+        "2x Red velvet",
+        "2x Citrónová panna cotta"
+      ],
+      highlight: "2x Sypaný čaj included",
+      theme: "dark"
+    }
+  ];
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navigation */}
@@ -163,64 +204,84 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-10">
-            {/* Signature Box */}
-            <div className="bg-white border border-secondary/10 relative group overflow-hidden flex flex-col">
-              <div className="relative h-64 overflow-hidden">
-                <Image src="/images/signature-box.jpg" alt="Signature Box" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-primary/20"></div>
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-1">
-                   <span className="font-accent text-2xl text-secondary">Signature Box</span>
-                </div>
-              </div>
-              <div className="p-8 md:p-10 flex-1 flex flex-col">
-                <div className="text-4xl font-heading text-primary mb-6 tracking-tighter">€12.99</div>
-                <div className="w-12 h-px bg-secondary/30 mb-6"></div>
-                <ul className="space-y-3 text-primary/80 font-medium text-[14px] flex-1">
-                  <li>• 1x Šunka & syr</li>
-                  <li>• 1x Uhorka & cream cheese</li>
-                  <li>• 1x Vajíčko & žerucha</li>
-                  <li>• 1x Scones + džem & smotana</li>
-                  <li>• 1x Snickers cupcake</li>
-                  <li>• 1x Red velvet</li>
-                  <li>• 1x Citrónová panna cotta</li>
-                  <li className="font-bold text-secondary italic">Sypaný čaj included</li>
-                </ul>
-                <button className="w-full mt-10 bg-primary text-cream py-4 hover:bg-primary/90 transition-all font-semibold tracking-wider uppercase text-xs">
-                  Objednať Signature Box
+            {productBoxes.map((box) => (
+              <div 
+                key={box.id}
+                className={`border border-secondary/10 relative group overflow-hidden flex flex-col min-h-[450px] ${
+                  box.theme === 'dark' ? 'bg-primary text-cream' : 'bg-white text-primary'
+                }`}
+              >
+                {/* Tiny Corner Image Trigger */}
+                <button 
+                  onClick={() => setSelectedImage(box.image)}
+                  className="absolute top-6 right-6 z-10 w-20 h-20 overflow-hidden rounded-lg border-2 border-secondary/40 shadow-xl group/img"
+                  title="Kliknite pre zväčšenie"
+                >
+                  <Image 
+                    src={box.image} 
+                    alt={box.title} 
+                    fill 
+                    className="object-cover group-hover/img:scale-110 transition-transform duration-300" 
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover/img:bg-black/0 transition-colors flex items-center justify-center">
+                    <Search className="text-white w-5 h-5 opacity-0 group-hover/img:opacity-100 transition-opacity" />
+                  </div>
                 </button>
-              </div>
-            </div>
 
-            {/* Collection Box */}
-            <div className="bg-primary border border-secondary/10 relative group overflow-hidden text-cream flex flex-col">
-              <div className="relative h-64 overflow-hidden">
-                <Image src="/images/collection-box.jpg" alt="Collection Box" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-primary/20"></div>
-                <div className="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm px-4 py-1">
-                   <span className="font-accent text-2xl text-secondary">Collection Box</span>
+                <div className="p-10 flex-1 flex flex-col">
+                  <div className="font-accent text-3xl text-secondary mb-2">{box.title}</div>
+                  <div className={`text-4xl font-heading mb-6 tracking-tighter ${box.theme === 'dark' ? 'text-white' : 'text-primary'}`}>
+                    {box.price}
+                  </div>
+                  <div className="w-12 h-px bg-secondary/30 mb-8"></div>
+                  
+                  <ul className={`space-y-4 font-medium text-[15px] flex-1 ${box.theme === 'dark' ? 'text-cream/70' : 'text-primary/70'}`}>
+                    {box.items.map((item, idx) => (
+                      <li key={idx}>• {item}</li>
+                    ))}
+                    <li className="font-bold text-secondary italic pt-2">{box.highlight}</li>
+                  </ul>
+
+                  <button className={`w-full mt-12 py-5 transition-all font-semibold tracking-wider uppercase text-xs ${
+                    box.theme === 'dark' 
+                      ? 'bg-secondary text-white hover:bg-secondary/90 shadow-xl shadow-black/20' 
+                      : 'bg-primary text-cream hover:bg-primary/90'
+                  }`}>
+                    Objednať {box.title}
+                  </button>
                 </div>
               </div>
-              <div className="p-8 md:p-10 flex-1 flex flex-col">
-                <div className="text-4xl font-heading mb-6 tracking-tighter text-white">€21.99</div>
-                <div className="w-12 h-px bg-secondary/40 mb-6"></div>
-                <ul className="space-y-3 text-cream/70 font-medium text-[14px] flex-1">
-                  <li>• 2x Šunka & syr</li>
-                  <li>• 2x Uhorka & cream cheese</li>
-                  <li>• 2x Vajíčko & žerucha</li>
-                  <li>• 2x Scones + džem & smotana</li>
-                  <li>• 2x Snickers cupcake</li>
-                  <li>• 2x Red velvet</li>
-                  <li>• 2x Citrónová panna cotta</li>
-                  <li className="font-bold text-secondary italic">2x Sypaný čaj included</li>
-                </ul>
-                <button className="w-full mt-10 bg-secondary text-white py-4 hover:bg-secondary/90 transition-all font-semibold tracking-wider uppercase text-xs shadow-xl shadow-black/20">
-                  Objednať Collection Box
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
+
+      {/* Image Modal Popup */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-primary/95 backdrop-blur-md p-4 md:p-10 animate-in fade-in duration-300"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button 
+            className="absolute top-6 right-6 text-cream/60 hover:text-white p-2 transition-colors"
+            onClick={() => setSelectedImage(null)}
+          >
+            <X className="w-10 h-10" />
+          </button>
+          <div className="relative w-full max-w-5xl aspect-video rounded-xl overflow-hidden shadow-2xl border border-white/10" onClick={e => e.stopPropagation()}>
+            <Image 
+              src={selectedImage} 
+              alt="Detail boxu" 
+              fill 
+              className="object-contain" 
+              priority
+            />
+          </div>
+          <div className="absolute bottom-10 text-cream/40 text-sm uppercase tracking-widest pointer-events-none">
+            Kliknite kamkoľvek pre zatvorenie
+          </div>
+        </div>
+      )}
 
       {/* Contact Banner */}
       <section className="py-20 bg-background relative overflow-hidden">
