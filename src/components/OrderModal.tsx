@@ -223,13 +223,13 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
               {/* ── CONTACT ── */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px" } as React.CSSProperties}>
+                  <label style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px" }}>
                     <Phone size={13} /> Telefón
                   </label>
                   <input type="tel" required placeholder="+421 900 000 000" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} style={inputStyle} />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px" } as React.CSSProperties}>
+                  <label style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px" }}>
                     <Mail size={13} /> E-mail
                   </label>
                   <input type="email" required placeholder="jozef@email.sk" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} style={inputStyle} />
@@ -238,7 +238,7 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
 
               {/* ── ADDRESS ── */}
               <div>
-                <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px", alignItems: "center", gap: "4px", display: "flex" } as React.CSSProperties}>
+                <label style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px" }}>
                   <Home size={13} /> Ulica a číslo domu
                 </label>
                 <input
