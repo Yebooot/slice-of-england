@@ -15,7 +15,7 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "Kúsok Anglicka | Moderná Elegancia",
+  title: "Slice of England | Moderná Elegancia",
   description: "Tradičné britské popoludňajšie čaje, doručené až k vám.",
 };
 

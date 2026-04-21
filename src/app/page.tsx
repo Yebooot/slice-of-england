@@ -8,7 +8,7 @@ export default function Home() {
       <nav className="fixed w-full z-50 bg-cream/90 backdrop-blur-sm border-b border-secondary/20">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="font-heading text-2xl font-bold tracking-tight text-primary">
-            Kúsok Anglicka.
+            Slice of England.
           </div>
           <div className="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
             <a href="#o-nas" className="hover:text-secondary transition-colors">O nás</a>
@@ -163,7 +163,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             <div className="lg:col-span-2">
               <div className="font-heading text-3xl font-bold tracking-tight text-secondary mb-6">
-                Kúsok Anglicka.
+                Slice of England.
               </div>
               <p className="text-cream/60 max-w-sm mb-6">
                 Prinášame tradičný britský "Afternoon Tea" na Slovensko. Luxusný zážitok v každej krabici.
@@ -180,14 +180,14 @@ export default function Home() {
             <div>
               <h4 className="font-heading text-xl mb-4 text-cream">Kontakt</h4>
               <ul className="space-y-3 text-cream/60">
-                <li>ahoj@kusokanglicka.sk</li>
+                <li>ahoj@sliceofengland.sk</li>
                 <li>+421 900 000 000</li>
                 <li>Sledujte nás na Instagrame</li>
               </ul>
             </div>
           </div>
           <div className="pt-8 border-t border-cream/10 text-center text-cream/40 text-sm flex flex-col md:flex-row justify-between items-center gap-4">
-            <p>&copy; {new Date().getFullYear()} Kúsok Anglicka. Všetky práva vyhradené.</p>
+            <p>&copy; {new Date().getFullYear()} Slice of England. Všetky práva vyhradené.</p>
             <div className="flex space-x-6">
                <a href="#" className="hover:text-cream">Obchodné podmienky</a>
                <a href="#" className="hover:text-cream">Ochrana osobných údajov</a>

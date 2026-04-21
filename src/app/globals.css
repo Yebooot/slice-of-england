@@ -24,3 +24,11 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Hide Next.js dev indicator / Turbopack logo */
+[data-nextjs-toast-wrapper], 
+#next-dev-indicator,
+[data-nextjs-data-tooltip],
+[data-nextjs-build-error-help-link] {
+  display: none !important;
+}
