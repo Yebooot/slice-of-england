@@ -23,9 +23,9 @@ export default function Home() {
         "1x Scones + džem & smotana",
         "1x Snickers cupcake",
         "1x Red velvet",
-        "1x Citrónová panna cotta"
+        "1x Citrónová panna cotta",
+        "1x Sypaný čaj"
       ],
-      highlight: "Sypaný čaj included",
       theme: "light"
     },
     {
@@ -40,9 +40,9 @@ export default function Home() {
         "2x Scones + džem & smotana",
         "2x Snickers cupcake",
         "2x Red velvet",
-        "2x Citrónová panna cotta"
+        "2x Citrónová panna cotta",
+        "2x Sypaný čaj"
       ],
-      highlight: "2x Sypaný čaj included",
       theme: "dark"
     }
   ];
@@ -253,7 +253,6 @@ export default function Home() {
                     {box.items.map((item, idx) => (
                       <li key={idx}>• {item}</li>
                     ))}
-                    <li className="font-bold text-secondary italic pt-2">{box.highlight}</li>
                   </ul>
 
                   <button 
