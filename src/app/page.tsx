@@ -7,8 +7,18 @@ export default function Home() {
       {/* Navigation */}
       <nav className="fixed w-full z-50 bg-cream/90 backdrop-blur-sm border-b border-secondary/20">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="font-heading text-2xl font-bold tracking-tight text-primary flex items-center gap-2">
-            Slice of England
+          <div className="flex items-center gap-3">
+            <div className="relative w-12 h-12">
+              <Image 
+                src="/logo.jpg" 
+                alt="Slice of England Logo" 
+                fill 
+                className="object-contain rounded-full border border-secondary/20"
+              />
+            </div>
+            <div className="font-heading text-xl font-bold tracking-tight text-primary">
+              Slice of England
+            </div>
           </div>
           <div className="hidden md:flex space-x-10 text-[13px] font-medium tracking-widest uppercase">
             <a href="#o-nas" className="hover:text-secondary transition-colors">O nás</a>
@@ -234,8 +244,18 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             <div className="lg:col-span-2">
-              <div className="font-heading text-3xl font-bold tracking-tight text-secondary mb-6 lowercase italic">
-                slice of england.
+              <div className="flex items-center gap-4 mb-6">
+                <div className="relative w-16 h-16">
+                  <Image 
+                    src="/logo.jpg" 
+                    alt="Logo" 
+                    fill 
+                    className="object-contain rounded-full"
+                  />
+                </div>
+                <div className="font-heading text-2xl font-bold tracking-tight text-secondary lowercase italic">
+                  slice of england.
+                </div>
               </div>
               <p className="text-cream/60 max-w-sm mb-6 leading-relaxed">
                 Prinášame tradičný britský "Afternoon Tea" na Slovensko. Luxusný zážitok, ktorý k vám doručíme priamo domov.
