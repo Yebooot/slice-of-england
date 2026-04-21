@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Calendar as CalendarIcon, MapPin, Mail, Phone, Home as Info } from "lucide-react";
+import { X, Calendar as CalendarIcon, MapPin, Mail, Phone, Heart, Home as Info } from "lucide-react";
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -12,6 +12,8 @@ interface OrderModalProps {
 export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProps) {
   const [dateError, setDateError] = useState<string>("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     city: "",
@@ -43,16 +45,41 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Order submitted:", { box: boxTitle, ...formData });
-    setIsSuccess(true);
-    // User noted: "Once this gets filled out, I'll later tell you where this should be sent."
-    // Keeping it at success state for now.
-    setTimeout(() => {
-      setIsSuccess(false);
-      onClose();
-    }, 3000);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch("/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ box: boxTitle, ...formData }),
+      });
+
+      if (!response.ok) throw new Error("Nepodarilo sa odoslať objednávku.");
+
+      console.log("Order submitted successfully");
+      setIsSuccess(true);
+      
+      setTimeout(() => {
+        setIsSuccess(false);
+        onClose();
+        setFormData({
+          city: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          email: "",
+          address: "",
+          deliveryDate: "",
+        });
+      }, 3000);
+    } catch (err: any) {
+      setSubmitError(err.message || "Vyskytla sa chyba. Skúste to znova.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -67,7 +94,7 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
 
       {/* Modal Container */}
       <div 
-        className="relative bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in slide-in-from-bottom-8 duration-300"
+        className="relative bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -87,7 +114,7 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
         {/* Content */}
         <div className="p-6 md:p-8 overflow-y-auto">
           {isSuccess ? (
-            <div className="py-12 text-center animate-in fade-in zoom-in duration-500">
+            <div className="py-12 text-center duration-500">
               <div className="w-20 h-20 bg-secondary/10 text-secondary rounded-full flex items-center justify-center mx-auto mb-6">
                  <Heart className="w-10 h-10" />
               </div>
@@ -209,21 +236,34 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
                 )}
 
                 {formData.deliveryDate && !dateError && (
-                  <div className="mt-4 bg-secondary/10 text-primary border border-secondary/20 rounded-lg p-3 text-sm font-medium flex items-center gap-2 animate-in fade-in">
+                  <div className="mt-4 bg-secondary/10 text-primary border border-secondary/20 rounded-lg p-3 text-sm font-medium flex items-center gap-2">
                      <span className="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
                      Doručenie prebehne vo vybraný deň medzi 12:00 a 14:00.
                   </div>
                 )}
               </div>
 
+              {submitError && (
+                <div className="p-4 bg-red-50 text-red-600 rounded-lg text-sm border border-red-200">
+                  {submitError}
+                </div>
+              )}
+
               {/* Submit */}
               <div className="pt-4 sticky bottom-0 bg-white">
                 <button 
                   type="submit"
-                  disabled={!formData.city || !formData.deliveryDate || !!dateError}
-                  className="w-full bg-primary text-cream py-4 rounded-lg hover:bg-primary/90 transition-all font-semibold tracking-wider uppercase text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-primary/10"
+                  disabled={!formData.city || !formData.deliveryDate || !!dateError || isSubmitting}
+                  className="w-full bg-primary text-cream py-4 rounded-lg hover:bg-primary/90 transition-all font-semibold tracking-wider uppercase text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-primary/10 flex items-center justify-center gap-3"
                 >
-                  Záväzne Objednať
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-cream/30 border-t-cream rounded-full animate-spin"></div>
+                      Odosielam...
+                    </>
+                  ) : (
+                    "Záväzne Objednať"
+                  )}
                 </button>
               </div>
 
