@@ -118,13 +118,13 @@ export default function Home() {
               
               <div className="space-y-12">
                 <div className="flex gap-8">
-                  <div className="w-24 h-24 shrink-0 bg-white border border-secondary/20 flex items-center justify-center p-2">
+                  <div className="w-24 h-24 shrink-0 flex items-center justify-center -ml-4">
                     <Image 
                       src="/scone-illustration.png" 
                       alt="Scones illustration" 
-                      width={80} 
-                      height={80} 
-                      className="object-contain"
+                      width={100} 
+                      height={100} 
+                      className="object-contain mix-blend-multiply opacity-90 scale-110"
                     />
                   </div>
                   <div>
@@ -135,13 +135,13 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="flex gap-8">
-                  <div className="w-24 h-24 shrink-0 bg-white border border-secondary/20 flex items-center justify-center p-2">
+                  <div className="w-24 h-24 shrink-0 flex items-center justify-center -ml-4">
                     <Image 
                       src="/tea-illustration.png" 
                       alt="Tea illustration" 
-                      width={80} 
-                      height={80} 
-                      className="object-contain"
+                      width={100} 
+                      height={100} 
+                      className="object-contain mix-blend-multiply opacity-90 scale-125"
                     />
                   </div>
                   <div>
