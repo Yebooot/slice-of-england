@@ -15,7 +15,7 @@ export default function Home() {
       id: "signature",
       title: "Signature Box",
       price: "€12.99",
-      image: "/images/signature-box.jpg",
+      image: "/images/signature-box.png",
       items: [
         "1x Šunka & syr",
         "1x Uhorka & cream cheese",
@@ -32,7 +32,7 @@ export default function Home() {
       id: "collection",
       title: "Collection Box",
       price: "€21.99",
-      image: "/images/collection-box.jpg",
+      image: "/images/collection-box.png",
       items: [
         "2x Šunka & syr",
         "2x Uhorka & cream cheese",
