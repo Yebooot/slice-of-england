@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Coffee, Gift, Heart, ArrowRight, UtensilsCrossed, Sparkles } from "lucide-react";
+import { Coffee, Gift, Heart, ArrowRight, UtensilsCrossed } from "lucide-react";
 
 export default function Home() {
   return (
@@ -160,48 +160,56 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 gap-10">
             {/* Signature Box */}
-            <div className="bg-white p-8 md:p-12 border border-secondary/10 relative group overflow-hidden">
-              <div className="absolute top-0 right-0 p-8">
-                <span className="font-accent text-4xl text-secondary">Signature Box</span>
+            <div className="bg-white border border-secondary/10 relative group overflow-hidden flex flex-col">
+              <div className="relative h-64 overflow-hidden">
+                <Image src="/images/signature-box.jpg" alt="Signature Box" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-primary/20"></div>
+                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-1">
+                   <span className="font-accent text-2xl text-secondary">Signature Box</span>
+                </div>
               </div>
-              <div className="mt-12">
-                <div className="text-5xl font-heading text-primary mb-8 tracking-tighter">€12.99</div>
-                <div className="w-12 h-px bg-secondary/30 mb-8"></div>
-                <ul className="space-y-4 text-primary/80 font-medium text-[15px]">
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary/60" /> 1x Šunka & syr</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary/60" /> 1x Uhorka & cream cheese</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary/60" /> 1x Vajíčko & žerucha</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary/60" /> 1x Scones + džem & smotana</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary/60" /> 1x Snickers cupcake</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary/60" /> 1x Red velvet</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary/60" /> 1x Citrónová panna cotta</li>
-                  <li className="flex items-center gap-3 font-bold text-secondary">Sypaný čaj included</li>
+              <div className="p-8 md:p-10 flex-1 flex flex-col">
+                <div className="text-4xl font-heading text-primary mb-6 tracking-tighter">€12.99</div>
+                <div className="w-12 h-px bg-secondary/30 mb-6"></div>
+                <ul className="space-y-3 text-primary/80 font-medium text-[14px] flex-1">
+                  <li>• 1x Šunka & syr</li>
+                  <li>• 1x Uhorka & cream cheese</li>
+                  <li>• 1x Vajíčko & žerucha</li>
+                  <li>• 1x Scones + džem & smotana</li>
+                  <li>• 1x Snickers cupcake</li>
+                  <li>• 1x Red velvet</li>
+                  <li>• 1x Citrónová panna cotta</li>
+                  <li className="font-bold text-secondary italic">Sypaný čaj included</li>
                 </ul>
-                <button className="w-full mt-12 bg-primary text-cream py-4 hover:bg-primary/90 transition-all font-semibold tracking-wider uppercase text-xs">
+                <button className="w-full mt-10 bg-primary text-cream py-4 hover:bg-primary/90 transition-all font-semibold tracking-wider uppercase text-xs">
                   Objednať Signature Box
                 </button>
               </div>
             </div>
 
             {/* Collection Box */}
-            <div className="bg-primary p-8 md:p-12 border border-secondary/10 relative group text-cream">
-              <div className="absolute top-0 right-0 p-8">
-                <span className="font-accent text-4xl text-secondary">Collection Box</span>
+            <div className="bg-primary border border-secondary/10 relative group overflow-hidden text-cream flex flex-col">
+              <div className="relative h-64 overflow-hidden">
+                <Image src="/images/collection-box.jpg" alt="Collection Box" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-primary/20"></div>
+                <div className="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm px-4 py-1">
+                   <span className="font-accent text-2xl text-secondary">Collection Box</span>
+                </div>
               </div>
-              <div className="mt-12">
-                <div className="text-5xl font-heading mb-8 tracking-tighter text-white">€21.99</div>
-                <div className="w-12 h-px bg-secondary/40 mb-8"></div>
-                <ul className="space-y-4 text-cream/70 font-medium text-[15px]">
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary" /> 2x Šunka & syr</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary" /> 2x Uhorka & cream cheese</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary" /> 2x Vajíčko & žerucha</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary" /> 2x Scones + džem & smotana</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary" /> 2x Snickers cupcake</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary" /> 2x Red velvet</li>
-                  <li className="flex items-center gap-3"><Sparkles className="w-4 h-4 text-secondary" /> 2x Citrónová panna cotta</li>
-                  <li className="flex items-center gap-3 font-bold text-secondary">2x Sypaný čaj included</li>
+              <div className="p-8 md:p-10 flex-1 flex flex-col">
+                <div className="text-4xl font-heading mb-6 tracking-tighter text-white">€21.99</div>
+                <div className="w-12 h-px bg-secondary/40 mb-6"></div>
+                <ul className="space-y-3 text-cream/70 font-medium text-[14px] flex-1">
+                  <li>• 2x Šunka & syr</li>
+                  <li>• 2x Uhorka & cream cheese</li>
+                  <li>• 2x Vajíčko & žerucha</li>
+                  <li>• 2x Scones + džem & smotana</li>
+                  <li>• 2x Snickers cupcake</li>
+                  <li>• 2x Red velvet</li>
+                  <li>• 2x Citrónová panna cotta</li>
+                  <li className="font-bold text-secondary italic">2x Sypaný čaj included</li>
                 </ul>
-                <button className="w-full mt-12 bg-secondary text-white py-4 hover:bg-secondary/90 transition-all font-semibold tracking-wider uppercase text-xs shadow-xl shadow-black/20">
+                <button className="w-full mt-10 bg-secondary text-white py-4 hover:bg-secondary/90 transition-all font-semibold tracking-wider uppercase text-xs shadow-xl shadow-black/20">
                   Objednať Collection Box
                 </button>
               </div>
