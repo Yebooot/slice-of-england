@@ -75,8 +75,8 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
           deliveryDate: "",
         });
       }, 3000);
-    } catch (err: any) {
-      setSubmitError(err.message || "Vyskytla sa chyba. Skúste to znova.");
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Vyskytla sa chyba. Skúste to znova.");
     } finally {
       setIsSubmitting(false);
     }
