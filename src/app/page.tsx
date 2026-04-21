@@ -4,9 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import { Coffee, Gift, Heart, ArrowRight, UtensilsCrossed, X, Search } from "lucide-react";
 import Logo from "@/components/Logo";
+import OrderModal from "@/components/OrderModal";
 
 export default function Home() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [orderModalBox, setOrderModalBox] = useState<string | null>(null);
 
   const productBoxes = [
     {
@@ -242,11 +244,14 @@ export default function Home() {
                     <li className="font-bold text-secondary italic pt-2">{box.highlight}</li>
                   </ul>
 
-                  <button className={`w-full mt-12 py-5 transition-all font-semibold tracking-wider uppercase text-xs ${
-                    box.theme === 'dark' 
-                      ? 'bg-secondary text-white hover:bg-secondary/90 shadow-xl shadow-black/20' 
-                      : 'bg-primary text-cream hover:bg-primary/90'
-                  }`}>
+                  <button 
+                    onClick={() => setOrderModalBox(box.title)}
+                    className={`w-full mt-12 py-5 transition-all font-semibold tracking-wider uppercase text-xs ${
+                      box.theme === 'dark' 
+                        ? 'bg-secondary text-white hover:bg-secondary/90 shadow-xl shadow-black/20' 
+                        : 'bg-primary text-cream hover:bg-primary/90'
+                    }`}
+                  >
                     Objednať {box.title}
                   </button>
                 </div>
@@ -335,6 +340,13 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Order Modal */}
+      <OrderModal 
+        isOpen={!!orderModalBox} 
+        onClose={() => setOrderModalBox(null)} 
+        boxTitle={orderModalBox || ""} 
+      />
     </div>
   );
 }
