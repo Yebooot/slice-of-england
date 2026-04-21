@@ -63,9 +63,9 @@ export default function Home() {
             <a href="#boxy" className="hover:text-secondary transition-colors">Boxy</a>
             <a href="#kontakt" className="hover:text-secondary transition-colors">Kontakt</a>
           </div>
-          <button className="bg-primary text-cream px-6 py-2.5 rounded-sm hover:bg-primary/90 transition-all font-medium text-sm">
+          <a href="#boxy" className="bg-primary text-cream px-6 py-2.5 rounded-sm hover:bg-primary/90 transition-all font-medium text-sm">
             Objednať
-          </button>
+          </a>
         </div>
       </nav>
 
