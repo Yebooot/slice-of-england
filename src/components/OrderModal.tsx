@@ -131,10 +131,10 @@ function CustomCalendar({
             key={d}
             style={{
               textAlign: "center",
-              padding: "8px 0",
-              fontSize: "11px",
+              padding: "6px 0",
+              fontSize: "10px",
               fontWeight: 700,
-              letterSpacing: "0.08em",
+              letterSpacing: "0.05em",
               color: i >= 5 ? "#b4914b" : "rgba(26,32,44,0.35)", // Sat=5 Sun=6
             }}
           >
@@ -144,7 +144,7 @@ function CustomCalendar({
       </div>
 
       {/* Day cells */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", padding: "8px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "2px", padding: "6px" }}>
         {cells.map((day, idx) => {
           if (day === null) return <div key={`blank-${idx}`} />;
 
@@ -165,10 +165,10 @@ function CustomCalendar({
               onClick={() => !disabled && onSelect(dateStr)}
               style={{
                 border: "none",
-                borderRadius: "8px",
-                margin: "2px",
+                borderRadius: "6px",
+                margin: "0",
                 padding: "0",
-                width: "calc(100% - 4px)",
+                width: "100%",
                 aspectRatio: "1",
                 display: "flex",
                 alignItems: "center",
@@ -184,9 +184,9 @@ function CustomCalendar({
                 color: isSelected
                   ? "white"
                   : disabled
-                  ? "rgba(26,32,44,0.2)"    // greyed out weekdays + past
+                  ? "rgba(26,32,44,0.2)"
                   : isWeekend
-                  ? "#1a202c"               // clickable weekends — dark
+                  ? "#1a202c"
                   : "rgba(26,32,44,0.2)",
                 outline: isToday && !isSelected ? "1px solid rgba(180,145,75,0.4)" : "none",
                 transition: "background 0.15s",
@@ -300,7 +300,7 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
         </div>
 
         {/* Body */}
-        <div style={{ padding: "28px", overflowY: "auto", flexGrow: 1 }}>
+        <div style={{ padding: "20px 24px", overflowY: "auto", flexGrow: 1, overflowX: "hidden" }}>
           {isSuccess ? (
             <div style={{ textAlign: "center", padding: "48px 0" }}>
               <div style={{ width: "80px", height: "80px", background: "rgba(180,145,75,0.1)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}>
@@ -332,7 +332,7 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
               </div>
 
               {/* Name */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
                 <div>
                   <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px" }}>Meno</label>
                   <input type="text" required placeholder="Jozef" value={form.firstName} onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))} style={inputStyle} />
@@ -344,7 +344,7 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
               </div>
 
               {/* Contact */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
                 <div>
                   <label style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px" }}>
                     <Phone size={13} /> Telefón
