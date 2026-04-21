@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, MapPin, Mail, Phone, Calendar, Heart, Home } from "lucide-react";
+import { X, MapPin, Mail, Phone, Heart, Home, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -31,7 +31,6 @@ const INITIAL_FORM: FormState = {
   deliveryDate: "",
 };
 
-// Cities and their valid postal codes (Slovak format, normalised without space)
 const CITY_POSTAL_MAP: Record<string, string[]> = {
   "Poprad":           ["05801"],
   "Spišská Sobota":   ["05801"],
@@ -46,6 +45,8 @@ const CITY_POSTAL_MAP: Record<string, string[]> = {
 };
 
 const CITIES = Object.keys(CITY_POSTAL_MAP);
+const MONTH_NAMES = ["Január","Február","Marec","Apríl","Máj","Jún","Júl","August","September","Október","November","December"];
+const DAY_NAMES = ["Po","Ut","St","Št","Pi","So","Ne"];
 
 function normalisePostal(raw: string): string {
   return raw.replace(/\s/g, "");
@@ -59,48 +60,164 @@ function getPostalStatus(city: string, postalCode: string): "empty" | "valid" | 
   return validCodes.includes(clean) ? "valid" : "coming-soon";
 }
 
+function toDateString(year: number, month: number, day: number): string {
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+// ─── Custom Calendar ───────────────────────────────────────────────
+function CustomCalendar({
+  selected,
+  onSelect,
+}: {
+  selected: string;
+  onSelect: (date: string) => void;
+}) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const [viewYear, setViewYear] = useState(today.getFullYear());
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
+
+  // First day of the month (0=Sun … 6=Sat), shift to Mon-start grid
+  const firstDow = new Date(viewYear, viewMonth, 1).getDay();
+  const leadingBlanks = (firstDow + 6) % 7; // Mon=0, Tue=1, …, Sun=6
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+  const cells: (number | null)[] = [
+    ...Array(leadingBlanks).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+
+  function prevMonth() {
+    if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11); }
+    else setViewMonth(m => m - 1);
+  }
+  function nextMonth() {
+    if (viewMonth === 11) { setViewYear(y => y + 1); setViewMonth(0); }
+    else setViewMonth(m => m + 1);
+  }
+
+  // Prevent going back before current month
+  const atMinMonth = viewYear === today.getFullYear() && viewMonth === today.getMonth();
+
+  return (
+    <div style={{ background: "white", border: "1px solid rgba(180,145,75,0.25)", borderRadius: "12px", overflow: "hidden", userSelect: "none" }}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", background: "#1a202c" }}>
+        <button
+          type="button"
+          onClick={prevMonth}
+          disabled={atMinMonth}
+          style={{ background: "transparent", border: "none", color: atMinMonth ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)", cursor: atMinMonth ? "not-allowed" : "pointer", padding: "4px", display: "flex", alignItems: "center" }}
+        >
+          <ChevronLeft size={18} />
+        </button>
+        <span style={{ color: "white", fontWeight: 700, fontSize: "15px", letterSpacing: "0.05em" }}>
+          {MONTH_NAMES[viewMonth]} {viewYear}
+        </span>
+        <button
+          type="button"
+          onClick={nextMonth}
+          style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.7)", cursor: "pointer", padding: "4px", display: "flex", alignItems: "center" }}
+        >
+          <ChevronRight size={18} />
+        </button>
+      </div>
+
+      {/* Day-of-week labels */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", background: "rgba(180,145,75,0.06)", borderBottom: "1px solid rgba(180,145,75,0.15)" }}>
+        {DAY_NAMES.map((d, i) => (
+          <div
+            key={d}
+            style={{
+              textAlign: "center",
+              padding: "8px 0",
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              color: i >= 5 ? "#b4914b" : "rgba(26,32,44,0.35)", // Sat=5 Sun=6
+            }}
+          >
+            {d}
+          </div>
+        ))}
+      </div>
+
+      {/* Day cells */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", padding: "8px" }}>
+        {cells.map((day, idx) => {
+          if (day === null) return <div key={`blank-${idx}`} />;
+
+          const date = new Date(viewYear, viewMonth, day);
+          const dow = date.getDay(); // 0=Sun, 6=Sat
+          const isWeekend = dow === 0 || dow === 6;
+          const isPast = date < today;
+          const dateStr = toDateString(viewYear, viewMonth, day);
+          const isSelected = dateStr === selected;
+          const isToday = dateStr === toDateString(today.getFullYear(), today.getMonth(), today.getDate());
+          const disabled = !isWeekend || isPast;
+
+          return (
+            <button
+              key={dateStr}
+              type="button"
+              disabled={disabled}
+              onClick={() => !disabled && onSelect(dateStr)}
+              style={{
+                border: "none",
+                borderRadius: "8px",
+                margin: "2px",
+                padding: "0",
+                width: "calc(100% - 4px)",
+                aspectRatio: "1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "13px",
+                fontWeight: isWeekend ? 700 : 400,
+                cursor: disabled ? "not-allowed" : "pointer",
+                background: isSelected
+                  ? "#b4914b"
+                  : isToday && !isSelected
+                  ? "rgba(180,145,75,0.12)"
+                  : "transparent",
+                color: isSelected
+                  ? "white"
+                  : disabled
+                  ? "rgba(26,32,44,0.2)"    // greyed out weekdays + past
+                  : isWeekend
+                  ? "#1a202c"               // clickable weekends — dark
+                  : "rgba(26,32,44,0.2)",
+                outline: isToday && !isSelected ? "1px solid rgba(180,145,75,0.4)" : "none",
+                transition: "background 0.15s",
+              }}
+            >
+              {day}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Modal ────────────────────────────────────────────────────
 export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProps) {
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
-  const [dateError, setDateError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
   function handleClose() {
     setForm(INITIAL_FORM);
-    setDateError("");
     setIsSuccess(false);
     setSubmitError("");
     onClose();
   }
 
-  function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const val = e.target.value;
-    if (!val) {
-      setForm((f) => ({ ...f, deliveryDate: "" }));
-      setDateError("");
-      return;
-    }
-    const parts = val.split("-");
-    const date = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-    const dow = date.getDay();
-    if (dow !== 0 && dow !== 6) {
-      setDateError("Doručujeme iba v Sobotu a Nedeľu. Prosím, vyberte víkend.");
-      setForm((f) => ({ ...f, deliveryDate: "" }));
-    } else {
-      setDateError("");
-      setForm((f) => ({ ...f, deliveryDate: val }));
-    }
-  }
-
   const postalStatus = form.city ? getPostalStatus(form.city, form.postalCode) : "empty";
   const addressValid = postalStatus === "valid";
-  const canSubmit =
-    form.city !== "" &&
-    form.deliveryDate !== "" &&
-    dateError === "" &&
-    addressValid &&
-    !isSubmitting;
+  const canSubmit = form.city !== "" && form.deliveryDate !== "" && addressValid && !isSubmitting;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -134,7 +251,6 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
 
   if (!isOpen) return null;
 
-  // Shared input style
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "12px 14px",
@@ -148,19 +264,26 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
     outline: "none",
   };
 
+  // Format selected date for display
+  function formatDate(iso: string) {
+    if (!iso) return null;
+    const [y, m, d] = iso.split("-");
+    const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+    const dayName = ["Nedeľa","Pondelok","Utorok","Streda","Štvrtok","Piatok","Sobota"][date.getDay()];
+    return `${dayName}, ${d}. ${MONTH_NAMES[parseInt(m) - 1]} ${y}`;
+  }
+
   return (
     <div
       style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}
       aria-modal="true"
       role="dialog"
     >
-      {/* Backdrop */}
       <div
         style={{ position: "absolute", inset: 0, backgroundColor: "rgba(26,32,44,0.95)", backdropFilter: "blur(4px)" }}
         onClick={handleClose}
       />
 
-      {/* Modal */}
       <div
         style={{ position: "relative", background: "#ffffff", width: "100%", maxWidth: "640px", borderRadius: "16px", overflow: "hidden", display: "flex", flexDirection: "column", maxHeight: "90vh", boxShadow: "0 25px 50px rgba(0,0,0,0.4)" }}
         onClick={(e) => e.stopPropagation()}
@@ -189,7 +312,7 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
 
-              {/* ── CITY ── */}
+              {/* City */}
               <div style={{ background: "rgba(180,145,75,0.05)", border: "1px solid rgba(180,145,75,0.2)", borderRadius: "12px", padding: "20px" }}>
                 <p style={{ margin: "0 0 12px", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#b4914b", display: "flex", alignItems: "center", gap: "8px" }}>
                   <MapPin size={14} /> Vyberte si vaše mesto
@@ -208,7 +331,7 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
                 <p style={{ margin: "8px 0 0", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,32,44,0.4)", textAlign: "right" }}>(Ďalšie mestá čoskoro)</p>
               </div>
 
-              {/* ── NAME ── */}
+              {/* Name */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div>
                   <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px" }}>Meno</label>
@@ -220,7 +343,7 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
                 </div>
               </div>
 
-              {/* ── CONTACT ── */}
+              {/* Contact */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div>
                   <label style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px" }}>
@@ -236,22 +359,15 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
                 </div>
               </div>
 
-              {/* ── ADDRESS ── */}
+              {/* Address */}
               <div>
                 <label style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px" }}>
                   <Home size={13} /> Ulica a číslo domu
                 </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="napr. Mnoheľova 867/3"
-                  value={form.street}
-                  onChange={(e) => setForm((f) => ({ ...f, street: e.target.value }))}
-                  style={inputStyle}
-                />
+                <input type="text" required placeholder="napr. Mnoheľova 867/3" value={form.street} onChange={(e) => setForm((f) => ({ ...f, street: e.target.value }))} style={inputStyle} />
               </div>
 
-              {/* ── POSTAL CODE ── */}
+              {/* Postal Code */}
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(26,32,44,0.7)", marginBottom: "6px" }}>PSČ (poštové smerovacie číslo)</label>
                 <input
@@ -260,38 +376,18 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
                   placeholder={form.city ? `napr. ${CITY_POSTAL_MAP[form.city]?.[0].slice(0,3)} ${CITY_POSTAL_MAP[form.city]?.[0].slice(3)}` : "058 01"}
                   value={form.postalCode}
                   onChange={(e) => setForm((f) => ({ ...f, postalCode: e.target.value }))}
-                  style={{
-                    ...inputStyle,
-                    borderColor: postalStatus === "coming-soon" ? "rgba(180,145,75,0.5)" : "rgba(180,145,75,0.3)",
-                  }}
+                  style={{ ...inputStyle, borderColor: postalStatus === "coming-soon" ? "rgba(180,145,75,0.5)" : "rgba(180,145,75,0.3)" }}
                   maxLength={6}
                 />
-
-                {/* Coming Soon message */}
                 {postalStatus === "coming-soon" && (
-                  <div style={{
-                    marginTop: "10px",
-                    padding: "12px 16px",
-                    background: "linear-gradient(135deg, rgba(180,145,75,0.08), rgba(180,145,75,0.04))",
-                    border: "1px solid rgba(180,145,75,0.25)",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "10px",
-                  }}>
+                  <div style={{ marginTop: "10px", padding: "12px 16px", background: "linear-gradient(135deg, rgba(180,145,75,0.08), rgba(180,145,75,0.04))", border: "1px solid rgba(180,145,75,0.25)", borderRadius: "8px", display: "flex", alignItems: "flex-start", gap: "10px" }}>
                     <span style={{ fontSize: "16px", flexShrink: 0, marginTop: "1px" }}>✦</span>
                     <div>
-                      <p style={{ margin: 0, fontSize: "13px", fontWeight: 700, color: "#b4914b", fontFamily: "var(--font-heading)" }}>
-                        Vaša oblasť je na mape — čoskoro!
-                      </p>
-                      <p style={{ margin: "3px 0 0", fontSize: "12px", color: "rgba(26,32,44,0.55)", lineHeight: 1.5 }}>
-                        Toto PSČ momentálne nie je v našej doručovacej zóne, ale rozrastáme sa. Sledujte nás — budeme u vás skôr, ako si myslíte.
-                      </p>
+                      <p style={{ margin: 0, fontSize: "13px", fontWeight: 700, color: "#b4914b" }}>Vaša oblasť je na mape — čoskoro!</p>
+                      <p style={{ margin: "3px 0 0", fontSize: "12px", color: "rgba(26,32,44,0.55)", lineHeight: 1.5 }}>Toto PSČ momentálne nie je v našej doručovacej zóne, ale rozrastáme sa. Sledujte nás — budeme u vás skôr, ako si myslíte.</p>
                     </div>
                   </div>
                 )}
-
-                {/* Valid confirmation */}
                 {postalStatus === "valid" && (
                   <div style={{ marginTop: "8px", fontSize: "12px", color: "#38a169", fontWeight: 600, display: "flex", alignItems: "center", gap: "6px" }}>
                     <span>✓</span> PSČ zodpovedá vybranému mestu — perfektné!
@@ -299,24 +395,30 @@ export default function OrderModal({ isOpen, onClose, boxTitle }: OrderModalProp
                 )}
               </div>
 
-              {/* ── DATE ── */}
-              <div style={{ background: "rgba(245,240,232,0.5)", border: "1px solid rgba(180,145,75,0.2)", borderRadius: "12px", padding: "20px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", fontWeight: 700, color: "#1a202c", marginBottom: "12px" }}>
-                  <Calendar size={14} color="#b4914b" /> Termín doručenia
+              {/* Custom Calendar */}
+              <div>
+                <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", fontWeight: 700, color: "#1a202c", marginBottom: "12px" }}>
+                  <span style={{ color: "#b4914b" }}>📅</span> Termín doručenia
+                  <span style={{ marginLeft: "auto", fontSize: "11px", fontWeight: 500, color: "rgba(26,32,44,0.4)", letterSpacing: "0.05em" }}>Len SOBOTA a NEDEĽA</span>
                 </label>
-                <input
-                  type="date"
-                  required
-                  value={form.deliveryDate}
-                  onChange={handleDateChange}
-                  min={new Date().toISOString().split("T")[0]}
-                  style={{ ...inputStyle, borderColor: dateError ? "#e53e3e" : "rgba(180,145,75,0.3)" }}
+
+                <CustomCalendar
+                  selected={form.deliveryDate}
+                  onSelect={(date) => setForm((f) => ({ ...f, deliveryDate: date }))}
                 />
-                {dateError && <p style={{ margin: "8px 0 0", color: "#e53e3e", fontSize: "13px" }}>{dateError}</p>}
-                {form.deliveryDate && !dateError && (
-                  <div style={{ marginTop: "12px", background: "rgba(180,145,75,0.1)", border: "1px solid rgba(180,145,75,0.2)", borderRadius: "8px", padding: "10px 14px", fontSize: "13px", fontWeight: 600, color: "#1a202c", display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ width: "8px", height: "8px", background: "#b4914b", borderRadius: "50%", display: "inline-block" }} />
-                    Doručenie prebehne medzi 12:00 a 14:00.
+
+                {form.deliveryDate && (
+                  <div style={{ marginTop: "12px", background: "rgba(180,145,75,0.1)", border: "1px solid rgba(180,145,75,0.2)", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span style={{ width: "8px", height: "8px", background: "#b4914b", borderRadius: "50%", display: "inline-block", flexShrink: 0 }} />
+                      <div>
+                        <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a202c" }}>{formatDate(form.deliveryDate)}</div>
+                        <div style={{ fontSize: "12px", color: "rgba(26,32,44,0.6)", marginTop: "2px" }}>Doručenie medzi 12:00 – 14:00</div>
+                      </div>
+                    </div>
+                    <button type="button" onClick={() => setForm((f) => ({ ...f, deliveryDate: "" }))} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "rgba(26,32,44,0.4)", textDecoration: "underline" }}>
+                      Zmeniť
+                    </button>
                   </div>
                 )}
               </div>
