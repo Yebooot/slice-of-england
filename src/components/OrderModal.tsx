@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Calendar as CalendarIcon, MapPin, User, Mail, Phone, Home as Info } from "lucide-react";
+import { X, Calendar as CalendarIcon, MapPin, Mail, Phone, Home as Info } from "lucide-react";
 
 interface OrderModalProps {
   isOpen: boolean;
