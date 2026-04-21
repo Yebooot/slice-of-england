@@ -118,8 +118,14 @@ export default function Home() {
               
               <div className="space-y-12">
                 <div className="flex gap-8">
-                  <div className="w-24 h-24 shrink-0 bg-white p-4 border border-secondary/20 flex items-center justify-center">
-                    <Coffee className="w-10 h-10 text-secondary" />
+                  <div className="w-24 h-24 shrink-0 bg-white border border-secondary/20 flex items-center justify-center p-2">
+                    <Image 
+                      src="/scone-illustration.png" 
+                      alt="Scones illustration" 
+                      width={80} 
+                      height={80} 
+                      className="object-contain"
+                    />
                   </div>
                   <div>
                     <h4 className="font-heading text-xl text-primary mb-2">Scones</h4>
@@ -129,8 +135,14 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="flex gap-8">
-                  <div className="w-24 h-24 shrink-0 bg-white p-4 border border-secondary/20 flex items-center justify-center">
-                    <UtensilsCrossed className="w-10 h-10 text-secondary" />
+                  <div className="w-24 h-24 shrink-0 bg-white border border-secondary/20 flex items-center justify-center p-2">
+                    <Image 
+                      src="/tea-illustration.png" 
+                      alt="Tea illustration" 
+                      width={80} 
+                      height={80} 
+                      className="object-contain"
+                    />
                   </div>
                   <div>
                     <h4 className="font-heading text-xl text-primary mb-2">Tea (Čaj)</h4>
