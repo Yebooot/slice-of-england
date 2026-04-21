@@ -119,7 +119,7 @@ export default function Home() {
               <div className="space-y-12">
                 <div className="flex gap-8">
                   <div className="w-24 h-24 shrink-0 bg-white p-4 border border-secondary/20 flex items-center justify-center">
-                    <UtensilsCrossed className="w-10 h-10 text-secondary" />
+                    <Coffee className="w-10 h-10 text-secondary" />
                   </div>
                   <div>
                     <h4 className="font-heading text-xl text-primary mb-2">Scones</h4>
@@ -130,7 +130,7 @@ export default function Home() {
                 </div>
                 <div className="flex gap-8">
                   <div className="w-24 h-24 shrink-0 bg-white p-4 border border-secondary/20 flex items-center justify-center">
-                    <Coffee className="w-10 h-10 text-secondary" />
+                    <UtensilsCrossed className="w-10 h-10 text-secondary" />
                   </div>
                   <div>
                     <h4 className="font-heading text-xl text-primary mb-2">Tea (Čaj)</h4>
